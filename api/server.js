@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors');
 
 async function start() {
   const app = express();
@@ -8,6 +9,7 @@ async function start() {
   const {data: {results: users}} = await axios('https://randomuser.me/api/?results=1000');
   
   const router = express.Router()
+
   router.get('/search', (req, res, next) => {
     // or const q = req.query.q ==> Especially if you have multiple parameters: const {q, location} = req.query
     let { q } = req.query
@@ -23,6 +25,7 @@ async function start() {
     res.json(searched);
   })
 
+  app.use(cors());
   app.use(router);
 
   app.listen(3000);
