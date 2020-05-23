@@ -1,0 +1,14 @@
+{
+  "name": "cm-react-autocomplete",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Suzy <suzy.nakayama@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node api/server.js"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "express": "^4.17.1"
+  }
+}
