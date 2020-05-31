@@ -15,13 +15,13 @@ async function start() {
     let { q } = req.query
     if (!q) return next(new Error('No query found!'))
 
-    const searched = users.filter(user => {
+    let searched = users.filter(user => {
       // we will return a boolean and that will 'decide' if we will have anything inside the array
       const name = `${user.name.first} ${user.name.last}`.toLowerCase()
       //it will return true or false in case the name includes the query
       return name.includes(q.toLowerCase());
     });
-
+    searched = searched.slice(0, 9);
     res.json(searched);
   })
 

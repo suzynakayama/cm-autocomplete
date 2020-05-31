@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from 'axios';
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   position: relative;
+  width: 50vw;
+  margin: 50px auto;
   &, * { box-sizing: border-box;}
+  h1 {
+    text-align: center;
+    color: #0025ff;
+  }
   ul {
     position: absolute;
     width: 100%;
@@ -75,9 +81,6 @@ const Autocomplete = ({ onChange }) => {
     switch (evt.key) {
       case 'ArrowDown':
       case 'ArrowUp':
-        evt.stopPropagation();
-        evt.preventDefault();
-
         let newIdx = hoveredIdx + (evt.key === "ArrowDown" ? 1 : -1);
         if (newIdx < 0) newIdx = results.length - 1;
         if (newIdx >= results.length) newIdx = 0;
@@ -85,8 +88,9 @@ const Autocomplete = ({ onChange }) => {
         break;
       
       case 'Enter':
-        if (results[hoveredIdx]) {
-          select(results[hoveredIdx]);
+        let res = results[hoveredIdx];
+        if (res) {
+          select(res);
           setFocused(false);
         }
         break;
@@ -105,6 +109,16 @@ const Autocomplete = ({ onChange }) => {
     setTimeout(() => setFocused(false), 100);
   };
   
+  const handleClick = () => {
+    if (results && hoveredIdx) {
+      let res = results[hoveredIdx];
+      if (res) {
+        select(res);
+        setFocused(false);
+      }
+    }
+  };
+  
   useEffect(() => {
     if (!results) return;
     const current = results[hoveredIdx];
@@ -117,11 +131,16 @@ const Autocomplete = ({ onChange }) => {
 
   return (
     <Wrapper>
+      <h1>Search</h1>
       <Input
         type="text"
-        onChange={(evt) => setQuery(evt.target.value)}
+        onChange={(evt) => {
+          setQuery(evt.target.value);
+          setFocused(true);
+        }}
+        onClick={handleClick}
         onKeyDown={handleKey}
-        value={ query }
+        value={query}
         onFocus={() => setFocused(true)}
         onBlur={hide}
       />
@@ -131,8 +150,11 @@ const Autocomplete = ({ onChange }) => {
             <ResultItem
               key={idx}
               focus={idx === hoveredIdx}
-              onMouseEnter={ () => setHoveredIdx(idx) }
-              onClick={() => select(result)}
+              onMouseEnter={() => setHoveredIdx(idx)}
+              // onClick={ () => {
+              //   console.log('clicked')
+              //   select(result);
+              // } }
             >
               <img src={result.picture.thumbnail} />
               {result.name.first} {result.name.last}
